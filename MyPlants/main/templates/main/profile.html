@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+
+{% block title %} MyPlants - profile {% endblock %}
+
+{% block content %} 
+<div class="background-rectangle">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Welcome to your profile, {{ request.user.username }}!</h3>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">logout</button>
+            </form>
+            <form action="{% url 'delete' %}" method="post" class="text-center mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">delete account</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

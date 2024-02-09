@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+
+{% block title %} MyPlants - logged out {% endblock %}
+
+{% block content %} 
+<h1>You have been logged out</h1>
+<p> </p>
+<a href="{% url 'login' %}" class="btn btn-custom">Login</a>
+<p> </p>
+<p>Don't have an account? Create one <a href="/register">here!</a></p>
+{% endblock %}

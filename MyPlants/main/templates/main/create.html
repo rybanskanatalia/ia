@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+
+{% block title %} MyPlants - new plant list {% endblock %}
+
+{% block content %} 
+<h3>Create New Plant List</h3>
+<p></p>
+<form method="post" action="/create/" class="form-group">
+    <!-- security -->
+    {% csrf_token %}
+
+    <div class="input-group mb-3">
+        {{form.name}}
+        <div class="input-group-prepeend">
+            <button type="submit", name="save" class="btn btn-success">create</button>
+        </div>
+        <!-- .as_table .as_p .as_ul -->
+        
+       
+    </div>
+</form>
+{% endblock %}
