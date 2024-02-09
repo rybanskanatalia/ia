@@ -3,11 +3,10 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import logout, login
-from .models import ToDoList, Item, PlantList, Plants
+from .models import PlantList, Plants
 from .forms import CreateNewList, AddPlantForm
 
 # home view with all plants
-
 @login_required
 def home(request):
     # Fetch plants specific to the current user
@@ -64,49 +63,49 @@ def index(request):
             form = AuthenticationForm()
         return render(request, 'main/login.html', {'form': form})
     
-# this function will have to be redone, it is from the tutorial
-def index1(response, id):
-    ls = ToDoList.objects.get(id=id)
+# this function has to be redone, it is from the tutorial
+# def index1(response, id):
+#     ls = ToDoList.objects.get(id=id)
 
-    if ls in response.user.todolist.all():
-        if response.method == "POST":
-            print(response.POST)
-            if response.POST.get("save"):
-                for item in ls.item_set.all():
-                    # if response.POST.get("c" + str(item.id)) == "clicked":
-                    if f"c{item.id}" in response.POST:
-                        item.cocmplete = True
-                    else:
-                        item.cocmplete = False
-                    item.save()
+#     if ls in response.user.todolist.all():
+#         if response.method == "POST":
+#             print(response.POST)
+#             if response.POST.get("save"):
+#                 for item in ls.item_set.all():
+#                     # if response.POST.get("c" + str(item.id)) == "clicked":
+#                     if f"c{item.id}" in response.POST:
+#                         item.cocmplete = True
+#                     else:
+#                         item.cocmplete = False
+#                     item.save()
 
-            elif response.POST.get("newItem"):
-                txt = response.POST.get("new")
+#             elif response.POST.get("newItem"):
+#                 txt = response.POST.get("new")
 
-                if len(txt) > 0:
-                    ls.item_set.create(text=txt, cocmplete = False)
-                else:
-                    print("invalid")
+#                 if len(txt) > 0:
+#                     ls.item_set.create(text=txt, cocmplete = False)
+#                 else:
+#                     print("invalid")
 
-        return render(response, "main/list.html", {"ls": ls})
-    return render(response, "main.view.html", {})
+#         return render(response, "main/list.html", {"ls": ls})
+#     return render(response, "main.view.html", {})
 
-def create(response):
-    # default is always get
-    if response.method == "POST":
-        form = CreateNewList(response.POST)
+# def create(response):
+#     # default is always get
+#     if response.method == "POST":
+#         form = CreateNewList(response.POST)
 
-        if form.is_valid():
-            n = form.cleaned_data["name"]
-            t = ToDoList(name=n)
-            t.save()
-            response.user.todolist.add(t)
+#         if form.is_valid():
+#             n = form.cleaned_data["name"]
+#             t = ToDoList(name=n)
+#             t.save()
+#             response.user.todolist.add(t)
 
-        return HttpResponseRedirect("/%i" %t.id)
+#         return HttpResponseRedirect("/%i" %t.id)
 
-    else:
-        form = CreateNewList()
-    return render(response, "main/create.html", {"form":form})
+#     else:
+#         form = CreateNewList()
+#     return render(response, "main/create.html", {"form":form})
 
 # logout
 def logout_view(request):
@@ -126,6 +125,9 @@ def delete_account(request):
     return HttpResponseBadRequest("invalid request")
 
 # other views that do exactly nothing
+def create(response):
+    return render(response, 'main/create.html')
+
 def view(response):
     return render(response, "main/view.html", {})
 
@@ -143,9 +145,6 @@ def out(response):
 
 def profile(response):
     return render(response, "main/profile.html", {})
-
-
-
 
 # use post when doing modifications to database, getting private info (encrypts the info and sends it to the server)
 # use get when retrieving info (all the info goes into the url and pastes it further)

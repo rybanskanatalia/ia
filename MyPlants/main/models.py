@@ -6,20 +6,20 @@ from django.dispatch import receiver
 # Create your models here.
 
 
-class ToDoList(models.Model): 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+# class ToDoList(models.Model): 
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=200)
     
-    def __str__(self): 
-        return self.name
+#     def __str__(self): 
+#         return self.name
     
-class Item(models.Model):
-    todolist = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
-    text = models.CharField(max_length=300)
-    cocmplete = models.BooleanField()
+# class Item(models.Model):
+#     todolist = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
+#     text = models.CharField(max_length=300)
+#     cocmplete = models.BooleanField()
 
-    def __str__(self):
-        return self.text
+#     def __str__(self):
+#         return self.text
 
 ####
 @receiver(post_migrate)
@@ -41,7 +41,7 @@ class Plants(models.Model):
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
     water = models.IntegerField()
-    fertilise = models.IntegerField()
+    period = models.IntegerField()
 
     def __str__(self):
         return self.name

@@ -8,7 +8,7 @@ class CreateNewList(forms.Form):
 class AddPlantForm(forms.ModelForm):
     class Meta:
         model = Plants
-        fields = ['name', 'type', 'water', 'fertilise']
+        fields = ['name', 'type', 'water', 'period']
 
     def waterdays(self):
         water = self.cleaned_data.get('water')
@@ -17,7 +17,7 @@ class AddPlantForm(forms.ModelForm):
         return water
     
     def perioddays(self):
-        fertilise = self.cleaned_data.get('fertilise')
-        if fertilise < 1:
-            raise forms.ValidationError("fertilise value cannot be negative.")
-        return fertilise
+        period = self.cleaned_data.get('period')
+        if period < 1:
+            raise forms.ValidationError("period value cannot be negative.")
+        return period

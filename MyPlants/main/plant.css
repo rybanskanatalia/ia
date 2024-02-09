@@ -1,0 +1,103 @@
+/* Add your CSS styles here */
+/* listy */
+.listy {
+    position: absolute;
+    width: 238.14px;
+    height: 222.64px;
+    left: 1018px;
+    top: 538px;
+}
+
+/* Group 3 */
+.group3 {
+    position: absolute;
+    width: 173.14px;
+    height: 222.64px;
+    left: 1083px;
+    top: 538px;
+}
+
+/* Vector 1 */
+.vector1 {
+    position: absolute;
+    width: 173.14px;
+    height: 222.64px;
+    left: 1083px;
+    top: 538px;
+    border: 5px solid #3C8403;
+}
+
+/* Vector 2 */
+.vector2 {
+    position: absolute;
+    width: 150.47px;
+    height: 6.31px;
+    left: 1109.5px;
+    top: 744.5px;
+    border: 5px solid #3C8403;
+    transform: rotate(-51.6deg);
+}
+
+/* Vector 3 */
+.vector3 {
+    position: absolute;
+    width: 10.08px;
+    height: 151.02px;
+    left: 1203.59px;
+    top: 626.13px;
+    border: 5px solid #3C8403;
+    transform: rotate(32.02deg);
+}
+
+/* Rectangle 4 */
+.rectangle4 {
+    position: absolute;
+    width: 98px;
+    height: 131px;
+    left: 1018px;
+    top: 600px;
+    background: #FFFFFF;
+}
+
+/* Group 4 */
+.group4 {
+    position: absolute;
+    width: 87.46px;
+    height: 112.47px;
+    left: 1117.46px;
+    top: 611px;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+/* Vector 1 */
+.vector1-2 {
+    position: absolute;
+    width: 87.46px;
+    height: 112.47px;
+    left: 1117.46px;
+    top: 611px;
+    border: 5px solid #57C600;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+/* Vector 2 */
+.vector2-2 {
+    position: absolute;
+    width: 76.01px;
+    height: 3.19px;
+    left: 1104.07px;
+    top: 715.31px;
+    border: 5px solid #57C600;
+    transform: matrix(-0.62, -0.78, -0.78, 0.62, 0, 0);
+}
+
+/* Vector 3 */
+.vector3-2 {
+    position: absolute;
+    width: 5.09px;
+    height: 76.29px;
+    left: 1056.54px;
+    top: 655.52px;
+    border: 5px solid #57C600;
+    transform: matrix(-0.85, 0.53, 0.53, 0.85, 0, 0);
+}

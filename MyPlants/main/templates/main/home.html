@@ -1,34 +1,31 @@
-
-<!-- inheritance of the base contents -->
 {% extends 'main/base.html' %}
 
-<!-- titles the page -->
 {% block title%}
 MyPlants - home 
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>your plants:</h1>
-    <table class="table table-striped text-center">
-        <thead class="thead-dark">
-            <tr>
-                <th>name</th>
-                <th>type</th>
-                <th>water in</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for plant in plants %}
-            <tr>
-                <td>{{ plant.name }}</td>
-                <td>{{ plant.type }}</td>
-                <td>{{ plant.water }} days</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h1>Your plants:</h1>
+    <div class="table-responsive" style="max-height: 625px; overflow-y: auto;">
+        <table class="table table-striped table-hover text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>name</th>
+                    <th>type</th>
+                    <th>water in</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plant in plants %}
+                <tr>
+                    <td>{{ plant.name }}</td>
+                    <td>{{ plant.type }}</td>
+                    <td>{{ plant.water }} days</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
-
-
