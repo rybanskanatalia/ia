@@ -2,21 +2,14 @@
 
 {% block title %} MyPlants - new plant list {% endblock %}
 
-{% block content %} 
+{% block content %}
 <h3>Create New Plant List</h3>
-<p></p>
-<form method="post" action="/create/" class="form-group">
-    <!-- security -->
+<form method="post" class="form-group">
     {% csrf_token %}
-
-    <div class="input-group mb-3">
-        {{form.name}}
-        <div class="input-group-prepeend">
-            <button type="submit", name="save" class="btn btn-success">create</button>
-        </div>
-        <!-- .as_table .as_p .as_ul -->
-        
-       
+    <div class="form-group">
+        <label for="id_location">Location:</label>
+        <input type="text" id="id_location" name="location" class="form-control" required>
     </div>
+    <button type="submit" name="save" class="btn btn-success">Create</button>
 </form>
 {% endblock %}

@@ -13,11 +13,6 @@ def home(request):
     plants = Plants.objects.filter(listID__userID=request.user)
     return render(request, 'main/home.html', {'plants': plants})
 
-# def home(request):
-#     # Fetch all plants from the database
-#     plants = Plants.objects.all()
-#     return render(request, 'main/home.html', {'plants': plants})
-
 # add function for the plants
 def add_plant(request):
     # retrieve the default plant list where all plants are stored
@@ -63,6 +58,16 @@ def index(request):
             form = AuthenticationForm()
         return render(request, 'main/login.html', {'form': form})
     
+# delete a plant
+def delete_plants(request):
+    if request.method == 'POST':
+        plant_ids = request.POST.getlist('plant_id')
+        Plants.objects.filter(id__in=plant_ids).delete()
+        return redirect('home')  # Redirect to the home page after deletion
+    else:
+        # Handle GET requests or other cases
+        return render(request, 'error.html', {'message': 'Invalid request'})
+    
 # this function has to be redone, it is from the tutorial
 # def index1(response, id):
 #     ls = ToDoList.objects.get(id=id)
@@ -90,22 +95,27 @@ def index(request):
 #         return render(response, "main/list.html", {"ls": ls})
 #     return render(response, "main.view.html", {})
 
-# def create(response):
-#     # default is always get
-#     if response.method == "POST":
-#         form = CreateNewList(response.POST)
+# create new list
+def create(request):
+    if request.method == "POST":
+        form = CreateNewList(request.POST)
 
-#         if form.is_valid():
-#             n = form.cleaned_data["name"]
-#             t = ToDoList(name=n)
-#             t.save()
-#             response.user.todolist.add(t)
+        if form.is_valid():
+            location = form.cleaned_data["location"]
+            # Assuming you have user information available in the request
+            plant_list = PlantList(location=location, userID=request.user)
+            plant_list.save()
+            return redirect('view')  
+    else:
+        form = CreateNewList()  # Create an empty form to render in the template
 
-#         return HttpResponseRedirect("/%i" %t.id)
+    return render(request, 'main/create.html', {'form': form})
 
-#     else:
-#         form = CreateNewList()
-#     return render(response, "main/create.html", {"form":form})
+# view the lists
+def view(request):
+    # fetch all the lists created by the current user and order them alphabetically by location
+    user_lists = PlantList.objects.filter(userID=request.user).exclude(location='Default Plant List').order_by('location')
+    return render(request, "main/view.html", {'user_lists': user_lists})
 
 # logout
 def logout_view(request):
@@ -125,12 +135,6 @@ def delete_account(request):
     return HttpResponseBadRequest("invalid request")
 
 # other views that do exactly nothing
-def create(response):
-    return render(response, 'main/create.html')
-
-def view(response):
-    return render(response, "main/view.html", {})
-
 def share(response):
     return render(response, "main/share.html", {})
 

@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from datetime import datetime, timedelta
+from celery import shared_task
+from .tasks import update_water_attribute
 
 # Create your models here.
 
@@ -31,7 +36,7 @@ def create_default_list(sender, **kwargs):
 class PlantList(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=200)
-    plantAmount = models.IntegerField()
+    plantAmount = models.IntegerField(default=0)
     
     def __str__(self):
         return self.location
@@ -63,5 +68,9 @@ class Requests(models.Model):
         return self.text
     
 
-    
-
+receiver(post_save, sender=Plants)
+def schedule_water_update(sender, instance, created, **kwargs):
+    if created:
+        # Schedule the task to update water attribute at midnight
+        midnight = datetime.combine(datetime.today(), datetime.min.time()) + timedelta(days=1)
+        update_water_attribute.apply_async(args=[instance.id], eta=midnight)

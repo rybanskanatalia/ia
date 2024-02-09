@@ -5,4 +5,10 @@ view
 {% endblock %}
 
 {% block content %}
+<h3>Your Plant Lists</h3>
+<ul>
+    {% for plant_list in user_lists %}
+    <li>{{ plant_list.location }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}

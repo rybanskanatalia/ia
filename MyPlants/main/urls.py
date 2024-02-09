@@ -16,5 +16,6 @@ path("out/", views.out, name="out"),
 path("profile/", views.profile, name="profile"),
 path("delete/", views.delete, name="delete"),
 path("delete-account/", views.delete_account, name="delete_account"),
+path('delete-plants/', views.delete_plants, name='delete_plants'),
 ]
 

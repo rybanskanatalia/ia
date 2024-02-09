@@ -2,8 +2,7 @@ from django import forms
 from .models import Plants
 
 class CreateNewList(forms.Form):
-    name = forms.CharField(label="name", max_length=200)
-    check = forms.BooleanField(required=False)
+    location = forms.CharField(label="name", max_length=200)
 
 class AddPlantForm(forms.ModelForm):
     class Meta:
