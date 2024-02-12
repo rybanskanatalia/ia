@@ -26,6 +26,7 @@ def add_plant(request):
             plant.listID = default_list
             form.save()
             return redirect('home')
+        
     else:
         form = AddPlantForm()
     return render(request, 'main/add.html', {'form': form})

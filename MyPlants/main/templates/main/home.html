@@ -12,6 +12,7 @@ MyPlants - Home
         <div class="text-right mb-3">
             <button type="submit" class="btn btn-danger">Delete Selected Plants</button>
         </div>
+        <!-- display all the plants a user has in a table -->
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table class="table table-striped table-hover text-center">
                 <thead class="thead-dark">
@@ -19,16 +20,20 @@ MyPlants - Home
                         <th>name</th>
                         <th>type</th>
                         <th>water in</th>
-                        <th></th> <!-- Empty column for tick square -->
+                        <th>watering period</th>
+                        <th>edit</th>
+                        <th></th> <!-- tick square -->
                     </tr>
                 </thead>
                 <tbody>
-                    {% for plant in plants|dictsort:"water" %}
+                    {% for plant in plants|dictsort:"water" %}  <!-- sort into priority queue according to water -->
                     <tr>
                         <td>{{ plant.name }}</td>
                         <td>{{ plant.type }}</td>
                         <td>{{ plant.water }} days</td>
-                        <td><input type="checkbox" name="plant_id" value="{{ plant.id }}"></td> <!-- Tick square -->
+                        <td>{{ plant.period }} days</td>
+                        <td><button type="button" class="btn btn-primary" plantid="{{ plant.id }}" >edit</button></td>
+                        <td><input type="checkbox" name="plant_id" value="{{ plant.id }}"></td> <!-- tick square -->
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -36,4 +41,7 @@ MyPlants - Home
         </div>
     </div>
 </form>
+
+{% include 'main/edit.html' %}
+
 {% endblock %}
