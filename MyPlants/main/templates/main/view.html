@@ -8,7 +8,7 @@ view
 <h3>Your Plant Lists</h3>
 <ul>
     {% for plant_list in user_lists %}
-    <li>{{ plant_list.location }}</li>
+    <li><a href="{% url 'list' id=plant_list.id %}">{{ plant_list.location }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

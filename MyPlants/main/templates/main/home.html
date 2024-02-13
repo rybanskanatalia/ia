@@ -21,7 +21,7 @@ MyPlants - Home
                         <th>type</th>
                         <th>water in</th>
                         <th>watering period</th>
-                        <th>edit</th>
+                        <th></th> <!-- edit -->
                         <th></th> <!-- tick square -->
                     </tr>
                 </thead>
@@ -32,7 +32,7 @@ MyPlants - Home
                         <td>{{ plant.type }}</td>
                         <td>{{ plant.water }} days</td>
                         <td>{{ plant.period }} days</td>
-                        <td><button type="button" class="btn btn-primary" plantid="{{ plant.id }}" >edit</button></td>
+                        <td><button type="button" class="btn btn-primary edit_button" plantid="{{ plant.id }}">edit</button></td>
                         <td><input type="checkbox" name="plant_id" value="{{ plant.id }}"></td> <!-- tick square -->
                     </tr>
                     {% endfor %}
@@ -43,5 +43,19 @@ MyPlants - Home
 </form>
 
 {% include 'main/edit.html' %}
+
+<!-- <script>
+    // Add an event listener to all edit buttons
+    document.querySelectorAll('.edit_button').forEach(function (editButton) {
+        editButton.addEventListener('click', function (event) {
+            // Construct the URL for redirection
+            var redirectUrl = '/view';
+            
+            // Redirect to the specified page
+            window.location.href = redirectUrl;
+        });
+    });
+</script> -->
+
 
 {% endblock %}

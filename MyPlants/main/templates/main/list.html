@@ -1,32 +1,26 @@
 {% extends "main/base.html" %}
-{% block title %}View List{% endblock%}
+{% block title %}view list{% endblock%}
 
 {% block content %}
-    <h1>{{ ls.name }}</h1>
+    <h1>{{ pl.name }}</h1>
     <form method="post" action="#">
         {% csrf_token %}
         <!-- for loop to print the list -->
-        {% for item in ls.item_set.all %}
+        {% for Plants in pl.plants_set.all %}
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    {% if item.cocmplete == True %}
-                        <!-- <li>{{ item.text }} - COMPLETE</li> -->
-                        <input type="checkbox" value="clicked" name="c{{ item.id }}" checked>
-                    {% else %}
-                        <!-- <li>{{ item.text }} - INCOMPLETE</li> -->
-                        <input type="checkbox" value="clicked" name="c{{ item.id }}">
-                    {% endif %}
+                    <h3>{{Plants.name}}</h3>
                 </div>
             </div>
-            <input type="text", value="{{item.text}}" class="form-control">
+            <input type="text", value="{{Plants.name}}" class="form-control">
         </div>        
         {% endfor %}
 
         <div class="input-group mb-3">
             <input type="text" name="new">
             <div class="input-group-prepend">
-                <button type="submit" name="newItem" value="newItem" class="btn btn-success">Add Item</button>
+                <button type="submit" name="addPlant" value="addPlant" class="btn btn-success">Add Plant</button>
             </div>
         </div>
 

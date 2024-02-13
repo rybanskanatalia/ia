@@ -1,7 +1,17 @@
 {% extends 'main/base.html' %}
 
-{% block title %} MyPlants - share {% endblock %}
+{% block title %} MyPlants - Share {% endblock %}
 
 {% block content %} 
-<h3>Share your lists</h3>
+  <h3>Share Your Lists</h3>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Share</button>
+  </form>
+
+  {% if error %}
+    <p>{{ error }}</p>
+  {% endif %}
 {% endblock %}

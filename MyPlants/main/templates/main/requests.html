@@ -4,4 +4,23 @@
 
 {% block content %} 
 <h3>Here are your requests</h3>
+{% if user_requests %}
+<ul>
+    {% for request in user_requests %}
+    <li>
+        Sender: {{ request.senderID.email }}<br>
+        List: {{ request.listID }}<br>
+        Special Note: {{ request.specialNote }}<br>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" value="{{ request.id }}">
+            <button type="submit" name="action" value="accept">Accept</button>
+            <button type="submit" name="action" value="reject">Reject</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No share requests found.</p>
+{% endif %}
 {% endblock %}
