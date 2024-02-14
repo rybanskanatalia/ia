@@ -65,7 +65,7 @@ class Requests(models.Model):
     specialNote = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.text
+        return str(self.listID)
     
 
 receiver(post_save, sender=Plants)

@@ -212,8 +212,10 @@ def out(response):
     return render(response, "main/out.html", {})
 
 # functions that do exactly nothing
-def requests(response):
-    return render(response, "main/requests.html", {})
+def requests(request):
+    rqest = Requests.objects.filter(receiverEmail=request.user.email)
+    print(rqest)
+    return render(request, "main/requests.html", {'user_requests': rqest})
 
 def notifications(response):
     return render(response, "main/notifications.html", {})
