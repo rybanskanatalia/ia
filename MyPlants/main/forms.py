@@ -38,3 +38,4 @@ class ShareListForm(forms.Form):
 
     list = forms.ModelChoiceField(queryset=PlantList.objects.none(), empty_label=None, label='Select a list')
     email = forms.EmailField(label='Who are you sharing with (email)')
+    note = forms.CharField(label='Leave a special note:', max_length=999)

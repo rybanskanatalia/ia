@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout, login
 from .models import PlantList, Plants, Requests
 from .forms import CreateNewList, AddPlantForm, ShareListForm
+from django.urls import reverse
 
 # check if a user is authenticated
 def index(request):
@@ -79,15 +80,14 @@ def delete_plants(request):
         default_list.plantAmount -= del_amount
         default_list.save()
 
-        return redirect('home')  # Redirect to the home page after deletion
+        return redirect('home') 
     else:
-        # Handle GET requests or other cases
         return render(request, 'error.html', {'message': 'Invalid request'})
 
 def list(request, id):
     pl = PlantList.objects.get(id=id)
 
-    if pl in request.user.plantlist_set.all(): # Assuming you want to check if the user owns the plant list
+    if pl in request.user.plantlist_set.all(): # check if the user owns the plant list
         if request.method == "POST":
             print(request.POST)
             if request.POST.get("save"):
@@ -138,35 +138,6 @@ def delete_account(request):
             return redirect('login')
     return HttpResponseBadRequest("invalid request")
 
-# other views that do exactly nothing
-# def share(request):
-#     if request.method == 'POST':
-#         list_id = request.POST.get('list')
-#         email = request.POST.get('email')
-        
-#         # Validate email
-#         try:
-#             user_to_share_with = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             # Handle invalid email
-#             return render(request, 'share.html', {'error': 'Invalid email address'})
-        
-#         # Retrieve the selected list
-#         try:
-#             selected_list = PlantList.objects.get(id=list_id, userID=request.user)
-#         except PlantList.DoesNotExist:
-#             # Handle invalid list
-#             return render(request, 'share.html', {'error': 'Invalid list'})
-        
-#         # Share the list with the specified user
-#         selected_list.shared_with.add(user_to_share_with)
-#         selected_list.save()
-        
-#         # Redirect to a success page or display a success message
-#         return redirect('share_success')
-
-#     return render(request, 'share.html')
-
 def share(request):
     if request.method == 'POST':
         form = ShareListForm(request.POST, user=request.user)
@@ -174,34 +145,37 @@ def share(request):
             list_id = form.cleaned_data['list'].id
             email = form.cleaned_data['email']
 
-            # Validate email
+            # validate email
             try:
                 user_to_share_with = User.objects.get(email=email)
             except User.DoesNotExist:
-                # Handle invalid email
                 return render(request, 'share.html', {'form': form, 'error': 'Invalid email address'})
 
-            # Retrieve the selected list
+            # retrieve the selected list
             try:
                 selected_list = PlantList.objects.get(id=list_id, userID=request.user)
             except PlantList.DoesNotExist:
-                # Handle invalid list
                 return render(request, 'share.html', {'form': form, 'error': 'Invalid list'})
 
-            # Create a share request
+            # create a share request
             request_obj = Requests(senderID=request.user, listID=selected_list, receiverEmail=email)
             request_obj.save()
 
-            # Redirect to a success page or display a success message
-            return redirect('share_success')
+            return redirect(reverse('share_success') + f'?receiver_email={email}')
     else:
         form = ShareListForm(user=request.user)
 
     return render(request, 'main/share.html', {'form': form})
 
 def share_success(request):
-    # You can customize this view as needed, such as displaying a success message
-    return render(request, 'main/share_success.html')
+    receiver_email = request.GET.get('receiver_email')
+    return render(request, 'main/share_success.html', {'receiver_email': receiver_email})
+
+
+def requests(request):
+    rqest = Requests.objects.filter(receiverEmail=request.user.email)
+    print(rqest)
+    return render(request, "main/requests.html", {'user_requests': rqest})
 
 # load user's profile
 def profile(response):
@@ -212,11 +186,6 @@ def out(response):
     return render(response, "main/out.html", {})
 
 # functions that do exactly nothing
-def requests(request):
-    rqest = Requests.objects.filter(receiverEmail=request.user.email)
-    print(rqest)
-    return render(request, "main/requests.html", {'user_requests': rqest})
-
 def notifications(response):
     return render(response, "main/notifications.html", {})
 

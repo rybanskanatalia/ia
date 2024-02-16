@@ -14,13 +14,13 @@
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="request_id" value="{{ request.id }}">
-            <button type="submit" name="action" value="accept">Accept</button>
-            <button type="submit" name="action" value="reject">Reject</button>
+            <p></p>
+            <button type="submit" class="btn btn-success" name="action" value="accept" class="btn .btn">Accept</button>
+            <button type="submit" class="btn btn-danger" name="action" value="reject">Reject</button>
         </form>
     </li>
     {% endfor %}
 </ul>
-
 
 {% else %}
 <p>No share requests found.</p>

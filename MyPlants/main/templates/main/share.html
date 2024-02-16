@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %} MyPlants - Share {% endblock %}
 
@@ -11,6 +12,7 @@
     <button type="submit" class="btn btn-success">Share</button>
   </form>
 
+  <img src="{% static 'website.jpg' %}">
   {% if error %}
     <p>{{ error }}</p>
   {% endif %}
