@@ -1,91 +1,13 @@
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    // Handle edit button click
-    document.querySelectorAll('.btn-primary').forEach(function (editButton) {
-        editButton.addEventListener('click', function (event) {
-            var row = event.target.closest('tr'); // Find the closest table row
-            var cells = row.querySelectorAll('td'); // Find all cells in the row
-            
-            // Iterate over cells in the row
-            cells(function(water){
-                var content = water.innerText
+{% extends "main/base.html" %}
 
-                var input = document.createElement('input');
-                input.setAttribute('type', 'text');
-                input.setAttribute('value', content);
-                cell.innerText = ''; // Clear cell content
-                cell.appendChild(input); // Append input field to cell
-            })
-            // cells.forEach(function (cell) {
-            //     // Get the cell content
-            //     var content = cell.innerText;
-                
-            //     // Replace the cell content with input fields
-            //     var input = document.createElement('input');
-            //     input.setAttribute('type', 'text');
-            //     input.setAttribute('value', content);
-            //     cell.innerText = ''; // Clear cell content
-            //     cell.appendChild(input); // Append input field to cell
-            // });
-            
-            // Append save and cancel buttons to the row
-            var saveButton = document.createElement('button');
-            saveButton.setAttribute('type', 'button');
-            saveButton.innerText = 'Save';
-            saveButton.classList.add('btn', 'btn-success', 'save_edit');
-            row.appendChild(saveButton);
-            
-            var cancelButton = document.createElement('button');
-            cancelButton.setAttribute('type', 'button');
-            cancelButton.innerText = 'Cancel';
-            cancelButton.classList.add('btn', 'btn-danger', 'cancel_edit');
-            row.appendChild(cancelButton);
-        });
-    });
-    
-    // Handle save button click
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('save_edit')) {
-            var row = event.target.closest('tr'); // Find the closest table row
-            var inputs = row.querySelectorAll('input'); // Find all input fields in the row
-            
-            // Iterate over input fields in the row
-            inputs.forEach(function (input) {
-                // Replace the input fields with their values
-                var content = input.value;
-                var cell = input.parentElement; // Get the parent cell
-                cell.innerText = content; // Replace cell content with input value
-            });
-            
-            // Remove save and cancel buttons from the row
-            var saveButton = row.querySelector('.save_edit');
-            var cancelButton = row.querySelector('.cancel_edit');
-            saveButton.remove();
-            cancelButton.remove();
-        }
-    });
-    
-    // Handle cancel button click
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('cancel_edit')) {
-            var row = event.target.closest('tr'); // Find the closest table row
-            var inputs = row.querySelectorAll('input'); // Find all input fields in the row
-            
-            // Iterate over input fields in the row
-            inputs.forEach(function (input) {
-                // Replace the input fields with their original content
-                var content = input.getAttribute('value');
-                var cell = input.parentElement; // Get the parent cell
-                cell.innerText = content; // Replace cell content with original content
-            });
-            
-            // Remove save and cancel buttons from the row
-            var saveButton = row.querySelector('.save_edit');
-            var cancelButton = row.querySelector('.cancel_edit');
-            saveButton.remove();
-            cancelButton.remove();
-        }
-    });
-});
+{% block title %}
+Edit Plant - {{ plant.name }}
+{% endblock %}
 
-</script>
+{% block content %}
+<h1>Edit Plant - {{ plant.name }}</h1>
+<h3>Edit your plant here:</h3>
+<ul>
+    
+</ul>
+{% endblock %}

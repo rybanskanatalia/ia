@@ -5,8 +5,20 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login
 from .models import PlantList, Plants, Requests
-from .forms import CreateNewList, AddPlantForm, ShareListForm
+from .forms import CreateNewList, AddPlantForm, ShareListForm, AddForm
 from django.urls import reverse
+
+def edit(request, id):
+    plant = Plants.objects.get(pk=id)
+    return render(request, 'main/edit.html', {'plant': plant})
+    # plant = Plants.objects.get(id=id)
+
+    # if request.method == "POST":
+    #     print(request.POST)
+    #     print(plant.id)
+    # else:
+    #     print("invalid")
+    # return render(request, "main/edit.html", {"plant": plant})
 
 # check if a user is authenticated
 def index(request):
@@ -31,10 +43,10 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')
-        else:
-            form = UserCreationForm()
-        return render(request, 'main/registration_form.html', {'form': form})
+            return redirect('home')  # Updated to 'home' without the slash
+    else:
+        form = UserCreationForm()
+    return render(request, 'main/registration_form.html', {'form': form})
 
 # home view with all plants
 @login_required
@@ -84,21 +96,6 @@ def delete_plants(request):
     else:
         return render(request, 'error.html', {'message': 'Invalid request'})
 
-def list(request, id):
-    pl = PlantList.objects.get(id=id)
-
-    if pl in request.user.plantlist_set.all(): # check if the user owns the plant list
-        if request.method == "POST":
-            print(request.POST)
-            if request.POST.get("save"):
-                print(pl.location)
-                for plant in pl.plant_set.all():
-                   print(plant.id)
-            else: 
-                print("invalid")
-        return render(request, "main/list.html", {"pl": pl})
-    return render(request, "main/view.html", {}) 
-
 # create new list
 def create(request):
     if request.method == "POST":
@@ -115,11 +112,56 @@ def create(request):
 
     return render(request, 'main/create.html', {'form': form})
 
+# create new list
+def create_new_list(request):
+    if request.method == 'POST':
+        form = CreateNewList(request.user, request.POST)
+        if form.is_valid():
+            new_list = form.save(request.user)
+            return redirect('view')
+    else:
+        form = CreateNewList(user=request.user)
+    
+    return render(request, 'main/create.html', {'form': form})
+
 # view the lists
 def view(request):
     # fetch all the lists created by the current user and order them alphabetically by location
     user_lists = PlantList.objects.filter(userID=request.user).exclude(location='Default Plant List').order_by('location')
     return render(request, "main/view.html", {'user_lists': user_lists})
+
+def list(request, id):
+    pl = PlantList.objects.get(id=id)
+    
+    # Fetch plants that belong to the user
+    user_plants = Plants.objects.filter(listID__userID=request.user)
+
+    if pl in request.user.plantlist_set.all(): # check if the user owns the plant list
+        if request.method == "POST":
+            if 'addPlant' in request.POST:
+                # Get the selected plant ID from the form
+                new_plant_id = request.POST.get('new')
+                if new_plant_id:
+                    # Get the plant object
+                    new_plant = Plants.objects.get(pk=new_plant_id)
+                    # Add the plant to the list and increase plantAmount
+                    pl.plants.add(new_plant)
+                    pl.plantAmount += 1
+                    pl.save()  # Save the changes to the PlantList
+
+            elif 'deleteSelected' in request.POST:
+                selected_plant_ids = request.POST.getlist('selected_plants')
+                if selected_plant_ids:
+                    # Remove selected plants from the list
+                    pl.plants.filter(pk__in=selected_plant_ids).delete()
+                    pl.plantAmount -= len(selected_plant_ids)
+                    pl.save()  # Save the changes to the PlantList
+
+            return redirect('list', id=id)  # Redirect back to the list page after adding/deleting plants
+
+        return render(request, "main/list.html", {"pl": pl, "user_plants": user_plants})
+    return render(request, "main/view.html", {})
+
 
 # logout
 def logout_view(request):

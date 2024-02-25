@@ -1,15 +1,16 @@
 {% extends "main/base.html" %}
 
-{% block title %}MyPlants - new account{% endblock %}
+{% block title %}MyPlants - New Account{% endblock %}
 
 {% load crispy_forms_tags %}
-{% crispy form %}
 
 {% block content %}
-    <form  method="post" class="form-group">
+<div class="container">
+    <h2>Create a New Account</h2>
+    <form action="{% url 'register' %}" method="post" class="form-group">
         {% csrf_token %}
-        {{form | crispy}}
+        {{ form | crispy }}
         <button type="submit" class="btn btn-success">Register</button>
     </form>
-{% endblock %} 
-<!-- action="{% url 'login' %}" -->
+</div>
+{% endblock %}

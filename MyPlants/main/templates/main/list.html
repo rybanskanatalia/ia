@@ -1,30 +1,53 @@
 {% extends "main/base.html" %}
-{% block title %}view list{% endblock%}
+{% load static %}
+{% block title %}View List{% endblock %}
 
 {% block content %}
-    <h1>{{ pl.name }}</h1>
-    <form method="post" action="#">
-        {% csrf_token %}
-        <!-- for loop to print the list -->
-        {% for Plants in pl.plants_set.all %}
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <h3>{{Plants.name}}</h3>
-                </div>
-            </div>
-            <input type="text", value="{{Plants.name}}" class="form-control">
-        </div>        
-        {% endfor %}
+<form method="post" action="">
+    {% csrf_token %}
+    <!-- Display plants in the list -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th></th> <!-- Checkbox column -->
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Water In</th>
+                    <th>Watering Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plant in pl.plants.all %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selected_plants" value="{{ plant.id }}">
+                    </td>
+                    <td>{{ plant.name }}</td>
+                    <td>{{ plant.type }}</td>
+                    <td>{{ plant.water }} days</td>
+                    <td>{{ plant.period }} days</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-        <div class="input-group mb-3">
-            <input type="text" name="new">
-            <div class="input-group-prepend">
-                <button type="submit" name="addPlant" value="addPlant" class="btn btn-success">Add Plant</button>
-            </div>
+    <!-- Add a new plant form with select2 -->
+    <div class="input-group mt-3">
+        <select id="id_new" name="new" class="form-control">
+            <option value="" selected disabled>Select a plant</option>
+            {% for plant in user_plants %}
+                <option value="{{ plant.id }}">{{ plant.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="input-group-append">
+            <button type="submit" name="addPlant" value="addPlant" class="btn btn-success">Add Plant</button>
         </div>
+    </div>
 
-        <button type="submit" name="save" value="save" class="btn btn-success">Save</button>
-        
-    </form>
+    <!-- Delete selected plants button -->
+    <button type="submit" name="deleteSelected" value="deleteSelected" class="btn btn-danger mt-3">Delete Selected Plants</button>
+</form>
+
 {% endblock %}

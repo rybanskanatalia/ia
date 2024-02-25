@@ -3,13 +3,27 @@
 {% block title %} MyPlants - new plant list {% endblock %}
 
 {% block content %}
-<h3>Create New Plant List</h3>
-<form method="post" class="form-group">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="id_location">Location:</label>
-        <input type="text" id="id_location" name="location" class="form-control" required>
-    </div>
-    <button type="submit" name="save" class="btn btn-success">Create</button>
-</form>
+<div class="container mt-4"></div>
+    <h3>Create New Plant List</h3>
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_location">Location:</label>
+            <input type="text" id="id_location" name="location" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="id_plants">Select Plants:</label><br>
+            {% for plant in form.plants.field.queryset %}
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="plants" value="{{ plant.pk }}" id="id_plants_{{ plant.pk }}"> {{ plant.name }}
+                </label>
+                <br>
+            {% endfor %}
+        </div>
+        <button type="submit" name="save" class="btn btn-success">Create</button>
+    </form>
+</div>
 {% endblock %}
+
+       
+       

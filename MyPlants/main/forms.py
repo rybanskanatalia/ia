@@ -1,19 +1,42 @@
 from django import forms
 from .models import Plants, PlantList
+from django_select2.forms import ModelSelect2Widget
 
-def waterdays(water):
-    if water < 1:
-        raise forms.ValidationError("water value cannot be negative")
-    return water 
-
-def perioddays(period):
-    if period < 1: 
-        raise forms.ValidationError("period value cannot be negative.")
-    return period
+class AddForm(forms.Form):
+    plant_autocomplete = forms.ModelChoiceField(
+        queryset=Plants.objects.all(),
+        widget=ModelSelect2Widget(
+            model=Plants,
+            search_fields=['name__icontains'],
+        )
+    )
 
 class CreateNewList(forms.Form):
-    location = forms.CharField(label="name", max_length=200)
+    location = forms.CharField(label="Location", max_length=200)
+    plants = forms.ModelMultipleChoiceField(
+        queryset=Plants.objects.none(),  # Update to empty queryset initially
+        label="Select Plants",
+        widget=forms.CheckboxSelectMultiple,
+    )
 
+    def __init__(self, user=None, *args, **kwargs):
+        super(CreateNewList, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['plants'].queryset = Plants.objects.filter(listID__userID=user)
+
+    def save(self, user):
+        location = self.cleaned_data['location']
+        selected_plants = self.cleaned_data['plants']
+        
+        # Create the new list
+        new_list = PlantList.objects.create(userID=user, location=location, plantAmount=len(selected_plants))
+        
+        # Add selected plants to the new list
+        new_list.plants.add(*selected_plants)
+        
+        # Return the new list object
+        return new_list
+    
 class AddPlantForm(forms.ModelForm):
     class Meta:
         model = Plants
@@ -23,6 +46,17 @@ class AddPlantForm(forms.ModelForm):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
         self.fields['water'].validators = [waterdays]    
         self.fields['period'].validators = [perioddays]
+
+# ensure the values will not be negative
+def waterdays(water):
+    if water < 1:
+        raise forms.ValidationError("water value cannot be negative")
+    return water 
+
+def perioddays(period):
+    if period < 1: 
+        raise forms.ValidationError("period value cannot be negative.")
+    return period
 
 class EditPlantForm(forms.ModelForm):
     class Meta:

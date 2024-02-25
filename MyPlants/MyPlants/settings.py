@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'main.apps.MainConfig', #tell django that my app exists and need to be modified
     'register.apps.RegisterConfig',
+    'django_select2',
 ]
 
 MIDDLEWARE = [
