@@ -58,27 +58,31 @@ def home(request):
 # add function for the plants
 def add_plant(request):
 
-    has_plants = Plants.objects.filter(listID__userID=request.user).exists()
-
-    if has_plants:
-        default_list = PlantList.objects.get(userID=request.user, location='Default Plant List') # retrieve the default plant list
-    else:
+    try:
+        # Try to get the default plant list for the user
+        default_list = PlantList.objects.get(userID=request.user, location='Default Plant List')
+        print('User has default plant list')
+    except PlantList.DoesNotExist:
+        # If the default list does not exist, create it
         default_list = PlantList.objects.create(userID=request.user, location='Default Plant List', plantAmount=0)
-    
+        print('Created default plant list')
+
     if request.method == 'POST':
         form = AddPlantForm(request.POST)
         if form.is_valid():
             plant = form.save(commit=False)
             
             plant.listID = default_list
-            default_list.plantAmount += 1 #increase the plant amount of the list
+            default_list.plantAmount += 1 # increase the plant amount of the list
             default_list.save()
 
             form.save()
             return redirect('home')
     else:
         form = AddPlantForm()
+
     return render(request, 'main/add.html', {'form': form})
+
 
 # delete a plant
 def delete_plants(request):
@@ -186,6 +190,7 @@ def share(request):
         if form.is_valid():
             list_id = form.cleaned_data['list'].id
             email = form.cleaned_data['email']
+            note = form.cleaned_data['note']
 
             # validate email
             try:
@@ -200,7 +205,7 @@ def share(request):
                 return render(request, 'share.html', {'form': form, 'error': 'Invalid list'})
 
             # create a share request
-            request_obj = Requests(senderID=request.user, listID=selected_list, receiverEmail=email)
+            request_obj = Requests(senderID=request.user, listID=selected_list, receiverEmail=email, specialNote=note)
             request_obj.save()
 
             return redirect(reverse('share_success') + f'?receiver_email={email}')
@@ -215,9 +220,25 @@ def share_success(request):
 
 
 def requests(request):
-    rqest = Requests.objects.filter(receiverEmail=request.user.email)
-    print(rqest)
-    return render(request, "main/requests.html", {'user_requests': rqest})
+    if request.method == "POST":
+        request_id = request.POST.get('request_id')
+        action = request.POST.get('action')
+
+        if action == 'accept':
+            # Handle the accept action if needed
+            pass  # Placeholder, you can add your logic here for accepting the request
+
+        elif action == 'reject':
+            # Delete the request if reject is clicked
+            Requests.objects.filter(id=request_id).delete()
+
+            # Redirect back to the same page to refresh the requests
+            return redirect('requests')
+
+    # Get requests for the current user
+    user_requests = Requests.objects.filter(receiverEmail=request.user.email)
+    
+    return render(request, "main/requests.html", {'user_requests': user_requests})
 
 # load user's profile
 def profile(response):
@@ -233,29 +254,3 @@ def notifications(response):
 
 # use post when doing modifications to database, getting private info (encrypts the info and sends it to the server)
 # use get when retrieving info (all the info goes into the url and pastes it further)
-
-# def index1(response, id):
-#     ls = ToDoList.objects.get(id=id)
-
-#     if ls in response.user.todolist.all():
-#         if response.method == "POST":
-#             print(response.POST)
-#             if response.POST.get("save"):
-#                 for item in ls.item_set.all():
-#                     # if response.POST.get("c" + str(item.id)) == "clicked":
-#                     if f"c{item.id}" in response.POST:
-#                         item.cocmplete = True
-#                     else:
-#                         item.cocmplete = False
-#                     item.save()
-
-#             elif response.POST.get("newItem"):
-#                 txt = response.POST.get("new")
-
-#                 if len(txt) > 0:
-#                     ls.item_set.create(text=txt, cocmplete = False)
-#                 else:
-#                     print("invalid")
-
-#         return render(response, "main/list.html", {"ls": ls})
-#     return render(response, "main.view.html", {})

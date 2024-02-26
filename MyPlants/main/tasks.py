@@ -1,6 +1,7 @@
 from celery import shared_task
 from django.core.mail import send_mail
 
+
 @shared_task
 def update_water_attribute(plant_id):
     # Retrieve the plant instance
@@ -15,7 +16,7 @@ def update_water_attribute(plant_id):
         send_mail(
             'Watering Reminder',
             f'Don\'t forget to water your {plant.name}!',
-            'rybanska.natalia04@gmail.com', 
+            'user@gmail.com', 
             [plant.user.email],  # recipient's email address
             fail_silently=False,
         )

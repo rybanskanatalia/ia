@@ -4,16 +4,15 @@
 {% block title %} MyPlants - Share {% endblock %}
 
 {% block content %} 
-  <h3>Share Your Lists</h3>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
+<h3>Share Your Lists</h3>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
 
-    <button type="submit" class="btn btn-success">Share</button>
-  </form>
+  <button type="submit" class="btn btn-success">Share</button>
+</form>
 
-  <img src="{% static 'website.jpg' %}">
-  {% if error %}
-    <p>{{ error }}</p>
-  {% endif %}
+{% if error %}
+  <p>{{ error }}</p>
+{% endif %}
 {% endblock %}

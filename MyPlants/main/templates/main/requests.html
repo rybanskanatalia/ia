@@ -10,12 +10,14 @@
     <li>
         Sender: {{ request.senderID.email }}<br>
         List: {{ request.listID }}<br>
-        Special Note: {{ request.specialNote }}<br>
+        Plant Amount: {{ request.listID.plantAmount }}<br>
+        Special Note: {{ request.specialNote|default:"No special note provided" }}<br>
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="request_id" value="{{ request.id }}">
-            <p></p>
-            <button type="submit" class="btn btn-success" name="action" value="accept" class="btn .btn">Accept</button>
+            <!-- Accept button -->
+            <button type="submit" class="btn btn-success" name="action" value="accept">Accept</button>
+            <!-- Reject button -->
             <button type="submit" class="btn btn-danger" name="action" value="reject">Reject</button>
         </form>
     </li>
