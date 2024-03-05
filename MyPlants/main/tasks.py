@@ -4,7 +4,6 @@ from django.core.mail import send_mail
 
 @shared_task
 def update_water_attribute(plant_id):
-    # Retrieve the plant instance
     from .models import Plants
     plant = Plants.objects.get(id=plant_id)
     
@@ -22,7 +21,7 @@ def update_water_attribute(plant_id):
         )
     
     elif plant.water == -1:
-        # Reset water attribute to period value
+        # reset water attribute to period value
         plant.water = plant.period
 
     plant.save()

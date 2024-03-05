@@ -15,9 +15,7 @@
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="request_id" value="{{ request.id }}">
-            <!-- Accept button -->
             <button type="submit" class="btn btn-success" name="action" value="accept">Accept</button>
-            <!-- Reject button -->
             <button type="submit" class="btn btn-danger" name="action" value="reject">Reject</button>
         </form>
     </li>

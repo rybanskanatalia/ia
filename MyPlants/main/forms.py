@@ -14,7 +14,7 @@ class AddForm(forms.Form):
 class CreateNewList(forms.Form):
     location = forms.CharField(label="Location", max_length=200)
     plants = forms.ModelMultipleChoiceField(
-        queryset=Plants.objects.none(),  # Update to empty queryset initially
+        queryset=Plants.objects.none(),  # update to empty queryset initially
         label="Select Plants",
         widget=forms.CheckboxSelectMultiple,
     )
@@ -28,13 +28,11 @@ class CreateNewList(forms.Form):
         location = self.cleaned_data['location']
         selected_plants = self.cleaned_data['plants']
         
-        # Create the new list
+        # create the new list and add any selected plants to the list
         new_list = PlantList.objects.create(userID=user, location=location, plantAmount=len(selected_plants))
         
-        # Add selected plants to the new list
         new_list.plants.add(*selected_plants)
-        
-        # Return the new list object
+
         return new_list
     
 class AddPlantForm(forms.ModelForm):
@@ -61,13 +59,13 @@ def perioddays(period):
 class EditPlantForm(forms.ModelForm):
     class Meta:
         model = Plants
-        fields = ['water', 'period']  # fields to be edited
+        fields = ['water', 'period']  
 
 class ShareListForm(forms.Form):
     def __init__(self, *args, user=None, **kwargs):
         super(ShareListForm, self).__init__(*args, **kwargs)
         if user:
-            # Filter the queryset to include only the user's lists
+            # filter the queryset to include only the user's lists
             self.fields['list'].queryset = PlantList.objects.filter(userID=user)
 
     list = forms.ModelChoiceField(queryset=PlantList.objects.none(), empty_label=None, label='Select a list')

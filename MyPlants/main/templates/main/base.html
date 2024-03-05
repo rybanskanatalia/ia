@@ -5,7 +5,7 @@
         /* . represents a class */
         .sidenav {
             height: 100%;
-            width: 0; /* Set initial width to 0 */
+            width: 0; 
             position: fixed;
             z-index: 1;
             top: 0;
@@ -13,7 +13,7 @@
             background-color: #4F8225;
             overflow-x: hidden;
             padding-top: 20px;
-            transition: 0.5s; /* Add transition for smooth animation */
+            transition: 0.5s; /* add transition for smooth animation */
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
         }
@@ -31,12 +31,12 @@
         }
 
         .main {
-            margin-left: 0; /* Adjust main content margin */
+            margin-left: 0; /* adjust main content margin */
             padding: 0px 10px;
-            transition: 0.5s; /* Add transition for smooth animation */
+            transition: 0.5s; 
         }
 
-        /* Add style for the toggle button */
+        /* add style for the toggle button */
         .toggle-btn {
             position: fixed;
             top: 30px;
@@ -67,18 +67,18 @@
         }
 
         .btn-custom {
-            background-color: #4F8225 !important; /* Set the button background color to green */
-            color: #fff !important; /* Set the button text color to white */
-            border-color: #4F8225 !important; /* Set the button border color to match the background color */
+            background-color: #4F8225 !important; 
+            color: #fff !important; 
+            border-color: #4F8225 !important; 
         }
 
-        /* Hover state for the button */
+        /* hover state for the button */
         .btn-custom:hover {
-            background-color: #6EB037 !important; /* Change button background color on hover */
-            border-color: #6EB037!important; /* Change button border color on hover */
+            background-color: #6EB037 !important; 
+            border-color: #6EB037!important; 
         }
 
-        /* Hide the toggle button and sidenav when the 'hide' class is applied */
+        /* hide the toggle button and sidenav */
         .hide .toggle-btn,
         .hide .sidenav {
             display: none;
@@ -86,8 +86,8 @@
 
         .circular-button {
             position: fixed;
-            top: 30px; /* Adjust top position */
-            right: 30px; /* Adjust right position */
+            top: 30px; 
+            right: 30px;
             background-color: transparent;
             color: #4F8225;
             border: 5px solid #4F8225;
@@ -95,7 +95,7 @@
             cursor: pointer;
             padding: 5px 10px;
             z-index: 2;
-            border-radius: 50%; /* Make it circular */
+            border-radius: 50%; 
             width: 50px;
             height: 50px;
             display: flex;
@@ -113,29 +113,29 @@
             background-color: #E0FED2;
             z-index: -1;
             border-radius: 20px; 
-            padding: 20px; /* Add padding to create space between the text and the edges of the rectangle */
+            padding: 20px; /* add padding to create space between the text and the edges of the rectangle */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .background-rectangle h3 {
-            margin-bottom: 20px; /* Adjust the margin to move the text downwards */
+            margin-bottom: 20px; 
         }
     </style>
 
     <style>
         .centered-link {
-            text-align: center; /* Center-align the text within the link */
-            display: block;     /* Make the link a block-level element */
-            margin: 0 auto;     /* Center the block (link) horizontally */
+            text-align: center; 
+            display: block;     
+            margin: 0 auto;     
             color: #FCFDFC !important;
             font-family: sans-serif;
         }
     </style>
 
     <script>
-        // Function to toggle sidebar and main content width
+        // toggle sidebar and main content width
         function toggleSidebar() {
             var sidebar = document.getElementById("mySidenav");
             var mainContent = document.getElementById("content");
@@ -184,7 +184,7 @@
     <!-- <a href="/notifications">notifications</a> -->
 </div>
 
-<!-- Button to toggle sidebar -->
+<!-- button to toggle sidebar -->
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <div id="content" name="content" class="main">

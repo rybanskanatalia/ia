@@ -11,39 +11,30 @@ from django.urls import reverse
 def edit(request, id):
     plant = Plants.objects.get(pk=id)
     return render(request, 'main/edit.html', {'plant': plant})
-    # plant = Plants.objects.get(id=id)
-
-    # if request.method == "POST":
-    #     print(request.POST)
-    #     print(plant.id)
-    # else:
-    #     print("invalid")
-    # return render(request, "main/edit.html", {"plant": plant})
 
 # check if a user is authenticated
 def index(request):
     if request.user.is_authenticated:
-        # Redirect to the desired page if the user is already logged in
+        # redirect to home page if the user is already logged in
         return redirect('home') 
     else:
         if request.method == "POST":
             form = AuthenticationForm(request, request.POST)
             if form.is_valid():
                 login(request, form.get_user())
-                # If login is successful, redirect to the desired page
                 return redirect('home') 
         else:
             form = AuthenticationForm()
         return render(request, 'main/login.html', {'form': form})
 
-# after registration the user is redirected to home page of their profile
+# after registration redirect to home page 
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Updated to 'home' without the slash
+            return redirect('home')  
     else:
         form = UserCreationForm()
     return render(request, 'main/registration_form.html', {'form': form})
@@ -51,7 +42,7 @@ def register(request):
 # home view with all plants
 @login_required
 def home(request):
-    # Fetch plants specific to the current user
+    # fetch plants specific to the authenticated user
     plants = Plants.objects.filter(listID__userID=request.user)
     return render(request, 'main/home.html', {'plants': plants})
 
@@ -59,11 +50,12 @@ def home(request):
 def add_plant(request):
 
     try:
-        # Try to get the default plant list for the user
+        # check if the user already has a default plant list 
         default_list = PlantList.objects.get(userID=request.user, location='Default Plant List')
         print('User has default plant list')
+
     except PlantList.DoesNotExist:
-        # If the default list does not exist, create it
+        # if the default list does not exist, create it
         default_list = PlantList.objects.create(userID=request.user, location='Default Plant List', plantAmount=0)
         print('Created default plant list')
 
@@ -101,22 +93,6 @@ def delete_plants(request):
         return render(request, 'error.html', {'message': 'Invalid request'})
 
 # create new list
-def create(request):
-    if request.method == "POST":
-        form = CreateNewList(request.POST)
-
-        if form.is_valid():
-            location = form.cleaned_data["location"]
-            # Assuming you have user information available in the request
-            plant_list = PlantList(location=location, userID=request.user)
-            plant_list.save()
-            return redirect('view')  
-    else:
-        form = CreateNewList()  # Create an empty form to render in the template
-
-    return render(request, 'main/create.html', {'form': form})
-
-# create new list
 def create_new_list(request):
     if request.method == 'POST':
         form = CreateNewList(request.user, request.POST)
@@ -137,31 +113,29 @@ def view(request):
 def list(request, id):
     pl = PlantList.objects.get(id=id)
     
-    # Fetch plants that belong to the user
     user_plants = Plants.objects.filter(listID__userID=request.user)
 
     if pl in request.user.plantlist_set.all(): # check if the user owns the plant list
         if request.method == "POST":
             if 'addPlant' in request.POST:
-                # Get the selected plant ID from the form
+                # get the selected plant ID from the form
                 new_plant_id = request.POST.get('new')
                 if new_plant_id:
-                    # Get the plant object
                     new_plant = Plants.objects.get(pk=new_plant_id)
-                    # Add the plant to the list and increase plantAmount
+                    # add the plant to the list 
                     pl.plants.add(new_plant)
                     pl.plantAmount += 1
-                    pl.save()  # Save the changes to the PlantList
+                    pl.save() 
 
             elif 'deleteSelected' in request.POST:
                 selected_plant_ids = request.POST.getlist('selected_plants')
                 if selected_plant_ids:
-                    # Remove selected plants from the list
+                    # remove selected plants from the list
                     pl.plants.filter(pk__in=selected_plant_ids).delete()
                     pl.plantAmount -= len(selected_plant_ids)
-                    pl.save()  # Save the changes to the PlantList
+                    pl.save()  
 
-            return redirect('list', id=id)  # Redirect back to the list page after adding/deleting plants
+            return redirect('list', id=id)  # redirect back to the list page after adding/deleting plants
 
         return render(request, "main/list.html", {"pl": pl, "user_plants": user_plants})
     return render(request, "main/view.html", {})
@@ -184,6 +158,7 @@ def delete_account(request):
             return redirect('login')
     return HttpResponseBadRequest("invalid request")
 
+# share the list
 def share(request):
     if request.method == 'POST':
         form = ShareListForm(request.POST, user=request.user)
@@ -218,24 +193,45 @@ def share_success(request):
     receiver_email = request.GET.get('receiver_email')
     return render(request, 'main/share_success.html', {'receiver_email': receiver_email})
 
-
+# share requests
 def requests(request):
     if request.method == "POST":
         request_id = request.POST.get('request_id')
         action = request.POST.get('action')
 
         if action == 'accept':
-            # Handle the accept action if needed
-            pass  # Placeholder, you can add your logic here for accepting the request
+            # get the request object
+            request_obj = Requests.objects.get(id=request_id)
 
-        elif action == 'reject':
-            # Delete the request if reject is clicked
-            Requests.objects.filter(id=request_id).delete()
+            # get the shared list
+            shared_list = PlantList.objects.get(location=request_obj.listID)
 
-            # Redirect back to the same page to refresh the requests
+            # check if the user already has this list
+            user_list_exists = PlantList.objects.filter(userID=request.user, location=shared_list.location).exists()
+
+            if not user_list_exists:
+                # create a new PlantList for the user based on the shared list
+                new_list = PlantList.objects.create(
+                    userID=request.user,
+                    location=shared_list.location,
+                    plantAmount=shared_list.plantAmount
+                )
+
+                new_list.plants.set(shared_list.plants.all())
+                new_list.save()
+
+            # delete the request after processing
+            request_obj.delete()
+
             return redirect('requests')
 
-    # Get requests for the current user
+        elif action == 'reject':
+            # delete the request if reject is clicked
+            Requests.objects.filter(id=request_id).delete()
+
+            return redirect('requests')
+
+    # get requests for the current user
     user_requests = Requests.objects.filter(receiverEmail=request.user.email)
     
     return render(request, "main/requests.html", {'user_requests': user_requests})
@@ -252,5 +248,17 @@ def out(response):
 def notifications(response):
     return render(response, "main/notifications.html", {})
 
-# use post when doing modifications to database, getting private info (encrypts the info and sends it to the server)
-# use get when retrieving info (all the info goes into the url and pastes it further)
+# create new list
+def create(request):
+    if request.method == "POST":
+        form = CreateNewList(request.POST)
+
+        if form.is_valid():
+            location = form.cleaned_data["location"]
+            plant_list = PlantList(location=location, userID=request.user)
+            plant_list.save()
+            return redirect('view')  
+    else:
+        form = CreateNewList()  
+
+    return render(request, 'main/create.html', {'form': form})

@@ -52,6 +52,6 @@ class Requests(models.Model):
 receiver(post_save, sender=Plants)
 def schedule_water_update(sender, instance, created, **kwargs):
     if created:
-        # Schedule the task to update water attribute at midnight
+        # schedule the task to update water attribute at midnight
         midnight = datetime.combine(datetime.today(), datetime.min.time()) + timedelta(days=1)
         update_water_attribute.apply_async(args=[instance.id], eta=midnight)

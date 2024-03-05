@@ -5,12 +5,12 @@
 {% block content %}
 <form method="post" action="">
     {% csrf_token %}
-    <!-- Display plants in the list -->
+    <!-- display plants in the list -->
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th></th> <!-- Checkbox column -->
+                    <th></th> <!-- checkbox column -->
                     <th>Name</th>
                     <th>Type</th>
                     <th>Water In</th>
@@ -33,7 +33,7 @@
         </table>
     </div>
 
-    <!-- Add a new plant form with select2 -->
+    <!-- add a new plant form with select2 -->
     <div class="input-group mt-3">
         <select id="id_new" name="new" class="form-control">
             <option value="" selected disabled>Select a plant</option>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <!-- Delete selected plants button -->
+    <!-- delete selected plants button -->
     <button type="submit" name="deleteSelected" value="deleteSelected" class="btn btn-danger mt-3">Delete Selected Plants</button>
 </form>
 
