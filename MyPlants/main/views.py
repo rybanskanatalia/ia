@@ -244,7 +244,7 @@ def profile(response):
 def out(response):
     return render(response, "main/out.html", {})
 
-# functions that do exactly nothing
+# functions for further development
 def notifications(response):
     return render(response, "main/notifications.html", {})
 
